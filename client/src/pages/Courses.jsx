@@ -78,11 +78,11 @@ export default function Courses() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-slate-900">Explore courses</h1>
+        <h1 className="text-3xl font-extrabold text-slate-900">Explore courses</h1>
         <p className="mt-1 text-slate-500">Find the right course to grow your skills.</p>
       </div>
 
-      <div className="mb-8 flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm md:flex-row md:items-end">
+      <div className="mb-8 flex flex-col gap-4 rounded-sm border border-slate-200 bg-white p-4 md:flex-row md:items-end">
         <form onSubmit={handleSearchSubmit} className="flex-1">
           <label className="mb-1.5 block text-sm font-medium text-slate-700">Search</label>
           <div className="relative">
@@ -130,7 +130,7 @@ export default function Courses() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {courses.map((c) => (
               <CourseCard key={c._id} course={c} />
             ))}
@@ -142,9 +142,9 @@ export default function Courses() {
                 <button
                   key={p}
                   onClick={() => goToPage(p)}
-                  className={`h-9 w-9 rounded-lg text-sm font-medium ${
+                  className={`h-9 w-9 rounded-sm text-sm font-medium ${
                     p === pagination.page
-                      ? 'bg-brand-600 text-white'
+                      ? 'bg-slate-900 text-white'
                       : 'border border-slate-300 text-slate-600 hover:bg-slate-50'
                   }`}
                 >

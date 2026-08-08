@@ -1,6 +1,8 @@
 const variants = {
   primary: 'bg-brand-600 text-white hover:bg-brand-700 focus-visible:outline-brand-600',
+  dark: 'bg-slate-900 text-white hover:bg-black focus-visible:outline-slate-900',
   secondary: 'bg-white text-slate-700 border border-slate-300 hover:bg-slate-50 focus-visible:outline-slate-400',
+  outline: 'bg-transparent text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white focus-visible:outline-slate-900',
   danger: 'bg-red-600 text-white hover:bg-red-700 focus-visible:outline-red-600',
   ghost: 'text-slate-600 hover:bg-slate-100',
 };

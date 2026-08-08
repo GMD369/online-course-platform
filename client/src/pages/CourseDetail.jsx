@@ -58,19 +58,20 @@ export default function CourseDetail() {
   const totalDuration = course.lessons?.reduce((sum, l) => sum + (l.duration || 0), 0) || 0;
 
   return (
-    <div className="bg-slate-50">
-      <div className="border-b border-slate-200 bg-white">
+    <div className="bg-white">
+      <div className="bg-slate-950">
         <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-4 py-10 sm:px-6 lg:grid-cols-3 lg:px-8">
           <div className="lg:col-span-2">
             <div className="flex items-center gap-2">
               <Badge color="brand">{course.category}</Badge>
               <Badge color="slate">{course.level}</Badge>
             </div>
-            <h1 className="mt-3 text-3xl font-bold text-slate-900">{course.title}</h1>
-            <p className="mt-3 text-slate-600">{course.description}</p>
-            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-500">
-              <span className="flex items-center gap-1">
-                <Star className="h-4 w-4 fill-amber-400 text-amber-400" /> {course.rating?.toFixed(1) || 'New'}
+            <h1 className="mt-3 text-3xl font-extrabold text-white">{course.title}</h1>
+            <p className="mt-3 text-lg text-slate-300">{course.description}</p>
+            <div className="mt-4 flex flex-wrap items-center gap-4 text-sm text-slate-300">
+              <span className="flex items-center gap-1 font-bold text-amber-400">
+                {course.rating?.toFixed(1) || 'New'}
+                <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
               </span>
               <span className="flex items-center gap-1">
                 <Users className="h-4 w-4" /> {course.enrollmentCount} students
@@ -84,14 +85,15 @@ export default function CourseDetail() {
                 {initials(course.instructor?.name)}
               </span>
               <div>
-                <p className="text-sm font-medium text-slate-800">{course.instructor?.name}</p>
-                <p className="text-xs text-slate-500">Instructor</p>
+                <p className="text-sm font-medium text-white">
+                  Created by <span className="text-brand-400 underline">{course.instructor?.name}</span>
+                </p>
               </div>
             </div>
           </div>
 
-          <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
-            <div className="aspect-video overflow-hidden rounded-lg bg-slate-100">
+          <div className="rounded-sm border border-slate-800 bg-white p-5 shadow-2xl">
+            <div className="aspect-video overflow-hidden rounded-sm bg-slate-100">
               {course.thumbnail ? (
                 <img src={assetUrl(course.thumbnail)} alt={course.title} className="h-full w-full object-cover" />
               ) : (
@@ -106,7 +108,7 @@ export default function CourseDetail() {
                 <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Already enrolled
               </Button>
             ) : (
-              <Button className="mt-4 w-full" onClick={handleEnrollClick}>
+              <Button className="mt-4 w-full" variant="dark" size="lg" onClick={handleEnrollClick}>
                 Enroll now
               </Button>
             )}
@@ -118,30 +120,32 @@ export default function CourseDetail() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <h2 className="mb-4 text-xl font-bold text-slate-900">Course content</h2>
-        <div className="divide-y divide-slate-200 overflow-hidden rounded-xl border border-slate-200 bg-white">
-          {course.lessons?.length ? (
-            course.lessons.map((lesson, i) => (
-              <div key={lesson._id} className="flex items-center justify-between gap-4 px-5 py-4">
-                <div className="flex items-center gap-3">
-                  {enrolled ? (
-                    <PlayCircle className="h-5 w-5 text-brand-600" />
-                  ) : (
-                    <Lock className="h-5 w-5 text-slate-300" />
-                  )}
-                  <div>
-                    <p className="text-sm font-medium text-slate-800">
-                      {i + 1}. {lesson.title}
-                    </p>
-                    {enrolled && lesson.content && <p className="mt-0.5 text-xs text-slate-500">{lesson.content}</p>}
+        <div className="lg:w-2/3">
+          <h2 className="mb-4 text-xl font-bold text-slate-900">Course content</h2>
+          <div className="divide-y divide-slate-200 overflow-hidden rounded-sm border border-slate-200 bg-white">
+            {course.lessons?.length ? (
+              course.lessons.map((lesson, i) => (
+                <div key={lesson._id} className="flex items-center justify-between gap-4 px-5 py-4">
+                  <div className="flex items-center gap-3">
+                    {enrolled ? (
+                      <PlayCircle className="h-5 w-5 text-brand-600" />
+                    ) : (
+                      <Lock className="h-5 w-5 text-slate-300" />
+                    )}
+                    <div>
+                      <p className="text-sm font-medium text-slate-800">
+                        {i + 1}. {lesson.title}
+                      </p>
+                      {enrolled && lesson.content && <p className="mt-0.5 text-xs text-slate-500">{lesson.content}</p>}
+                    </div>
                   </div>
+                  <span className="text-xs text-slate-400">{lesson.duration || 0}m</span>
                 </div>
-                <span className="text-xs text-slate-400">{lesson.duration || 0}m</span>
-              </div>
-            ))
-          ) : (
-            <p className="px-5 py-6 text-sm text-slate-500">No lessons have been added to this course yet.</p>
-          )}
+              ))
+            ) : (
+              <p className="px-5 py-6 text-sm text-slate-500">No lessons have been added to this course yet.</p>
+            )}
+          </div>
         </div>
       </div>
 
