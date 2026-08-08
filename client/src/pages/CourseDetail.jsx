@@ -11,6 +11,12 @@ import EnrollModal from '../components/EnrollModal';
 import { formatCurrency, initials } from '../utils/format';
 import { assetUrl } from '../utils/assetUrl';
 
+function youtubeEmbedUrl(url) {
+  if (!url) return null;
+  const match = url.match(/(?:youtu\.be\/|v=|embed\/)([\w-]{11})/);
+  return match ? `https://www.youtube.com/embed/${match[1]}` : null;
+}
+
 export default function CourseDetail() {
   const { id } = useParams();
   const { user } = useAuth();
@@ -18,6 +24,7 @@ export default function CourseDetail() {
   const [course, setCourse] = useState(null);
   const [enrolled, setEnrolled] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [activeLessonId, setActiveLessonId] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
   async function load() {
@@ -124,24 +131,47 @@ export default function CourseDetail() {
           <h2 className="mb-4 text-xl font-bold text-slate-900">Course content</h2>
           <div className="divide-y divide-slate-200 overflow-hidden rounded-sm border border-slate-200 bg-white">
             {course.lessons?.length ? (
-              course.lessons.map((lesson, i) => (
-                <div key={lesson._id} className="flex items-center justify-between gap-4 px-5 py-4">
-                  <div className="flex items-center gap-3">
-                    {enrolled ? (
-                      <PlayCircle className="h-5 w-5 text-brand-600" />
-                    ) : (
-                      <Lock className="h-5 w-5 text-slate-300" />
+              course.lessons.map((lesson, i) => {
+                const embedUrl = enrolled ? youtubeEmbedUrl(lesson.videoUrl) : null;
+                const isActive = activeLessonId === lesson._id;
+                return (
+                  <div key={lesson._id}>
+                    <button
+                      type="button"
+                      onClick={() => embedUrl && setActiveLessonId(isActive ? null : lesson._id)}
+                      className={`flex w-full items-center justify-between gap-4 px-5 py-4 text-left ${embedUrl ? 'hover:bg-slate-50' : ''}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        {enrolled ? (
+                          <PlayCircle className={`h-5 w-5 ${isActive ? 'text-brand-700' : 'text-brand-600'}`} />
+                        ) : (
+                          <Lock className="h-5 w-5 text-slate-300" />
+                        )}
+                        <div>
+                          <p className="text-sm font-medium text-slate-800">
+                            {i + 1}. {lesson.title}
+                          </p>
+                          {enrolled && lesson.content && (
+                            <p className="mt-0.5 text-xs text-slate-500">{lesson.content}</p>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-xs text-slate-400">{lesson.duration || 0}m</span>
+                    </button>
+                    {isActive && embedUrl && (
+                      <div className="aspect-video w-full bg-black">
+                        <iframe
+                          className="h-full w-full"
+                          src={embedUrl}
+                          title={lesson.title}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </div>
                     )}
-                    <div>
-                      <p className="text-sm font-medium text-slate-800">
-                        {i + 1}. {lesson.title}
-                      </p>
-                      {enrolled && lesson.content && <p className="mt-0.5 text-xs text-slate-500">{lesson.content}</p>}
-                    </div>
                   </div>
-                  <span className="text-xs text-slate-400">{lesson.duration || 0}m</span>
-                </div>
-              ))
+                );
+              })
             ) : (
               <p className="px-5 py-6 text-sm text-slate-500">No lessons have been added to this course yet.</p>
             )}
